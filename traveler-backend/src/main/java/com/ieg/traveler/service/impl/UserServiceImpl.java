@@ -8,6 +8,8 @@ import com.ieg.traveler.util.response.Response;
 import com.ieg.traveler.util.response.SuccessDataResponse;
 import com.ieg.traveler.util.response.SuccessResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -16,14 +18,18 @@ public class UserServiceImpl implements UserService{
 
     private UserRepository userRepository;
 
+    private PasswordEncoder passwordEncoder;
+
     @Autowired
     public UserServiceImpl(UserRepository userRepository) {
         super();
         this.userRepository = userRepository;
+        this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
     @Override
     public Response add(User user) {
+        user.setPassword(this.passwordEncoder.encode(user.getPassword()));
         this.userRepository.save(user);
         return new SuccessResponse("User has added");
     }
@@ -31,6 +37,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public Response update(User user) {
         this.userRepository.save(user);
+        user.setPassword(this.passwordEncoder.encode(user.getPassword()));
         return new SuccessResponse("User has updated.");
     }
 
