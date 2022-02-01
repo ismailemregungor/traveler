@@ -16,5 +16,5 @@ public interface UserService {
 
      DataResponse<User> getById(int id);
 
-     DataResponse<User> getUserByUserName(String userName);
+     DataResponse<User> getByUserName(String userName);
 }
