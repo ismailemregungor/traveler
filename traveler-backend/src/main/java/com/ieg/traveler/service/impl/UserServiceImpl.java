@@ -31,20 +31,20 @@ public class UserServiceImpl implements UserService{
     public Response add(User user) {
         user.setPassword(this.passwordEncoder.encode(user.getPassword()));
         this.userRepository.save(user);
-        return new SuccessResponse("User has added");
+        return new SuccessResponse("User has added!");
     }
 
     @Override
     public Response update(User user) {
         user.setPassword(this.passwordEncoder.encode(user.getPassword()));
         this.userRepository.save(user);
-        return new SuccessResponse("User has updated.");
+        return new SuccessResponse("User has updated!");
     }
 
     @Override
     public Response delete(int id) {
         this.userRepository.deleteById(id);
-        return new SuccessResponse("User has deleted.");
+        return new SuccessResponse("User has deleted!");
     }
 
     @Override
@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public DataResponse<User> getUserByUserName(String userName) {
-        return new SuccessDataResponse<>(this.userRepository.getUserByUserName(userName));
+    public DataResponse<User> getByUserName(String userName) {
+        return new SuccessDataResponse<>(this.userRepository.getByUserName(userName));
     }
 }
