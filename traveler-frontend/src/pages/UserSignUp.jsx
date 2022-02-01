@@ -1,52 +1,53 @@
 import React from 'react';
 import { signUp } from '../services/userService';
+import { Input } from '../components/Input.jsx';
 
 class SignUp extends React.Component {
   render() {
-    const { pendingApiCall } = this.state;
+    const { pendingApiCall, errors } = this.state;
+    const { displayName, userName, password, passwordRepeat } = errors;
     return (
       <div className="container">
         <form>
           <h1 className="text-center">Sign Up</h1>
-          <div className="form-group">
-            <label>Display Name</label>
-            <input
-              className="form-control"
-              name="displayName"
-              onChange={this.onChange}
-            />
-          </div>
-          <div>
-            <label>Username</label>
-            <input
-              className="form-control"
-              name="userName"
-              onChange={this.onChange}
-            />
-          </div>
-          <div>
-            <label>Password</label>
-            <input
-              className="form-control"
-              name="password"
-              type="password"
-              onChange={this.onChange}
-            />
-          </div>
-          <div>
-            <label>Password Repeat</label>
-            <input
-              className="form-control"
-              name="passwordRepeat"
-              type="password"
-              onChange={this.onChange}
-            />
-          </div>
-          <div>
+
+          <Input
+            name="displayName"
+            label="Display Name"
+            error={displayName}
+            onChange={this.onChange}
+            type="displayName"
+          ></Input>
+
+          <Input
+            name="userName"
+            label="User Name"
+            error={userName}
+            onChange={this.onChange}
+            type="userName"
+          ></Input>
+
+          <Input
+            name="password"
+            label="Password"
+            error={password}
+            onChange={this.onChange}
+            type="password"
+          ></Input>
+
+          <Input
+            name="passwordRepeat"
+            label="Password Repeat"
+            error={passwordRepeat}
+            onChange={this.onChange}
+            type="password"
+          ></Input>
+
+          <div className="button">
             <button
               className="btn btn-primary"
               onClick={this.onClickSignUp}
-              disabled={pendingApiCall}
+              disabled={pendingApiCall || passwordRepeat !== undefined}
             >
               {pendingApiCall && (
                 <span
@@ -69,24 +70,37 @@ class SignUp extends React.Component {
     password: null,
     passwordRepeat: null,
     pendingApiCall: false,
+    errors: {},
   };
 
   onChange = (event) => {
     const { name, value } = event.target;
+    const errors = { ...this.state };
+    errors[name] = undefined;
+    if (name === 'password' || 'passwordRepeat') {
+      if (name === 'password' && value !== this.state.passwordRepeat) {
+        errors.passwordRepeat = 'Password mismatch';
+      } else if (name === 'passwordRepeat' && value !== this.state.password) {
+        errors.passwordRepeat = 'Password mismatch';
+      } else {
+        errors.passwordRepeat = undefined;
+      }
+    }
     this.setState({
       [name]: value,
+      errors,
     });
   };
 
   onClickSignUp = async (event) => {
     event.preventDefault();
 
-    const { displayName, userName, passwod } = this.state;
+    const { displayName, userName, password } = this.state;
 
     const body = {
       displayName,
       userName,
-      passwod,
+      password,
     };
     this.setState({
       pendingApiCall: true,
@@ -94,7 +108,11 @@ class SignUp extends React.Component {
 
     try {
       const response = await signUp(body);
-    } catch (error) {}
+    } catch (error) {
+      if (error.response.data.validationErrors) {
+        this.setState({ errors: error.response.data.validationErrors });
+      }
+    }
     this.setState({ pendingApiCall: false });
   };
 }
