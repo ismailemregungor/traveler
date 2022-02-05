@@ -1,19 +1,21 @@
 import React from 'react';
-import { signUp } from '../services/userService';
+import { signUp, changeLanguage } from '../services/userService';
 import { Input } from '../components/Input.jsx';
+import { withTranslation } from 'react-i18next';
 
 class SignUp extends React.Component {
   render() {
     const { pendingApiCall, errors } = this.state;
     const { displayName, userName, password, passwordRepeat } = errors;
+    const { t } = this.props;
     return (
       <div className="container">
         <form>
-          <h1 className="text-center">Sign Up</h1>
+          <h1 className="text-center">{t('Sign Up')}</h1>
 
           <Input
             name="displayName"
-            label="Display Name"
+            label={t('Display Name')}
             error={displayName}
             onChange={this.onChange}
             type="displayName"
@@ -21,7 +23,7 @@ class SignUp extends React.Component {
 
           <Input
             name="userName"
-            label="User Name"
+            label={t('User Name')}
             error={userName}
             onChange={this.onChange}
             type="userName"
@@ -29,7 +31,7 @@ class SignUp extends React.Component {
 
           <Input
             name="password"
-            label="Password"
+            label={t('Password')}
             error={password}
             onChange={this.onChange}
             type="password"
@@ -37,7 +39,7 @@ class SignUp extends React.Component {
 
           <Input
             name="passwordRepeat"
-            label="Password Repeat"
+            label={t('Password Repeat')}
             error={passwordRepeat}
             onChange={this.onChange}
             type="password"
@@ -56,13 +58,36 @@ class SignUp extends React.Component {
                   aria-hidden="true"
                 ></span>
               )}
-              Sign Up
+              {t('Sign Up')}
             </button>
+
+            <div>
+              <img
+                src="https://flagcdn.com/tr.svg"
+                width="30"
+                alt="TR"
+                onClick={() => this.onChangeLanguage('tr')}
+                style={{ cursor: 'pointer' }}
+              ></img>
+              <img
+                src="https://flagcdn.com/gb.svg"
+                width="30"
+                alt="EN"
+                onClick={() => this.onChangeLanguage('en')}
+                style={{ cursor: 'pointer' }}
+              ></img>
+            </div>
           </div>
         </form>
       </div>
     );
   }
+
+  onChangeLanguage = (language) => {
+    const { i18n } = this.props;
+    i18n.changeLanguage(language);
+    changeLanguage(language);
+  };
 
   state = {
     userName: null,
@@ -76,12 +101,13 @@ class SignUp extends React.Component {
   onChange = (event) => {
     const { name, value } = event.target;
     const errors = { ...this.state };
+    const { t } = this.props;
     errors[name] = undefined;
     if (name === 'password' || 'passwordRepeat') {
       if (name === 'password' && value !== this.state.passwordRepeat) {
-        errors.passwordRepeat = 'Password mismatch';
+        errors.passwordRepeat = t('Password mismatch');
       } else if (name === 'passwordRepeat' && value !== this.state.password) {
-        errors.passwordRepeat = 'Password mismatch';
+        errors.passwordRepeat = t('Password mismatch');
       } else {
         errors.passwordRepeat = undefined;
       }
@@ -117,4 +143,5 @@ class SignUp extends React.Component {
   };
 }
 
-export default SignUp;
+const UserSignUpWithTranslation = withTranslation()(SignUp);
+export default UserSignUpWithTranslation;
