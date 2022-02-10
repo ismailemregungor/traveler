@@ -1,9 +1,9 @@
 import React from 'react';
-import { signUp, changeLanguage } from '../services/userService';
+import { signUp } from '../services/userService';
 import { Input } from '../components/Input.jsx';
 import { withTranslation } from 'react-i18next';
 
-class SignUp extends React.Component {
+class UserSignUp extends React.Component {
   render() {
     const { pendingApiCall, errors } = this.state;
     const { displayName, userName, password, passwordRepeat } = errors;
@@ -60,34 +60,11 @@ class SignUp extends React.Component {
               )}
               {t('Sign Up')}
             </button>
-
-            <div>
-              <img
-                src="https://flagcdn.com/tr.svg"
-                width="30"
-                alt="TR"
-                onClick={() => this.onChangeLanguage('tr')}
-                style={{ cursor: 'pointer' }}
-              ></img>
-              <img
-                src="https://flagcdn.com/gb.svg"
-                width="30"
-                alt="EN"
-                onClick={() => this.onChangeLanguage('en')}
-                style={{ cursor: 'pointer' }}
-              ></img>
-            </div>
           </div>
         </form>
       </div>
     );
   }
-
-  onChangeLanguage = (language) => {
-    const { i18n } = this.props;
-    i18n.changeLanguage(language);
-    changeLanguage(language);
-  };
 
   state = {
     userName: null,
@@ -143,5 +120,5 @@ class SignUp extends React.Component {
   };
 }
 
-const UserSignUpWithTranslation = withTranslation()(SignUp);
+const UserSignUpWithTranslation = withTranslation()(UserSignUp);
 export default UserSignUpWithTranslation;
