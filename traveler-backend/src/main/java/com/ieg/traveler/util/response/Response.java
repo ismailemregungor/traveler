@@ -3,6 +3,7 @@ package com.ieg.traveler.util.response;
 public class Response {
 
     private final boolean success;
+
     private String message;
 
     public Response(final boolean success) {
@@ -21,5 +22,4 @@ public class Response {
     public boolean isSuccess() {
         return success;
     }
-
 }
