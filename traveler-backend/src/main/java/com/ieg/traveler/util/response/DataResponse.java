@@ -1,5 +1,6 @@
 package com.ieg.traveler.util.response;
 
+
 public class DataResponse<T> extends Response {
 
     private final T data;
