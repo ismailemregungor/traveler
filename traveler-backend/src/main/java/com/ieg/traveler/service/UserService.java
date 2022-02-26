@@ -4,6 +4,7 @@ import com.ieg.traveler.model.user.User;
 import com.ieg.traveler.util.response.DataResponse;
 import com.ieg.traveler.util.response.Response;
 import java.util.List;
+
 public interface UserService {
 
      Response add(User user);
